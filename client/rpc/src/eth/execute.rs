@@ -25,7 +25,7 @@ use scale_codec::{Decode, Encode};
 // Substrate
 use sc_client_api::backend::{Backend, StorageProvider};
 use sc_transaction_pool::ChainApi;
-use sp_api::{ApiExt, CallApiAt, CallApiAtParams, CallContext, Extensions, ProvideRuntimeApi};
+use sp_api::{ApiExt, CallApiAt, CallApiAtParams, CallContext, ProvideRuntimeApi};
 use sp_block_builder::BlockBuilder as BlockBuilderApi;
 use sp_blockchain::HeaderBackend;
 use sp_inherents::CreateInherentDataProviders;
@@ -35,6 +35,7 @@ use sp_runtime::{
 	DispatchError, SaturatedConversion,
 };
 use sp_state_machine::OverlayedChanges;
+use sp_externalities::Extensions;
 // Frontier
 use fc_rpc_core::types::*;
 use fp_evm::{ExecutionInfo, ExecutionInfoV2};

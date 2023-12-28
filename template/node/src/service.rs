@@ -296,14 +296,13 @@ where
 		&client.block_hash(0)?.expect("Genesis block exists; qed"),
 		&config.chain_spec,
 	);
-
+	let (grandpa_peers_set_config, grandpa_notification_service) =
+		sc_consensus_grandpa::grandpa_peers_set_config(grandpa_protocol_name.clone());
 	let warp_sync_params = if sealing.is_some() {
 		None
 	} else {
-		net_config.add_notification_protocol(sc_consensus_grandpa::grandpa_peers_set_config(
-			grandpa_protocol_name.clone(),
-		));
-		let warp_sync: Arc<dyn sc_network::config::WarpSyncProvider<Block>> =
+		net_config.add_notification_protocol(grandpa_peers_set_config);
+		let warp_sync: Arc<dyn sc_network_sync::warp::WarpSyncProvider<Block>> =
 			Arc::new(sc_consensus_grandpa::warp_proof::NetworkProvider::new(
 				backend.clone(),
 				grandpa_link.shared_authority_set().clone(),
@@ -582,6 +581,7 @@ where
 				shared_voter_state: sc_consensus_grandpa::SharedVoterState::empty(),
 				telemetry: telemetry.as_ref().map(|x| x.handle()),
 				offchain_tx_pool_factory: OffchainTransactionPoolFactory::new(transaction_pool),
+				notification_service: grandpa_notification_service,
 			})?;
 
 		// the GRANDPA voter task is considered infallible, i.e.
